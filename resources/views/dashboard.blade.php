@@ -44,6 +44,7 @@
 
             <nav aria-label="Menu pengguna">
                 <p class="mb-3 text-[13px] font-bold text-[#c8dcc2]">MENU PENGGUNA</p>
+
                 <ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
                     <li>
                         <a href="{{ route('dashboard') }}" aria-current="page"
@@ -52,6 +53,7 @@
                             Dashboard
                         </a>
                     </li>
+
                     @foreach ($features as [$id, $title, $description, $action, $sidebarIcon])
                         <li>
                             <a href="#{{ $id }}"
@@ -66,7 +68,8 @@
 
             <div class="mt-4 border-t border-[#638566] pt-4">
                 <p class="mb-2 text-[13px] font-bold text-[#c8dcc2]">AKUN</p>
-                <a href="#profil"
+
+                <a href="{{ route('profile.show') }}"
                     class="flex min-h-[57px] items-center gap-[13px] rounded-[10px] px-[17px] text-[18px] font-semibold hover:bg-[#476a4a]">
                     <img src="{{ $icon('8ebb8') }}" alt="">
                     Profil Saya
@@ -102,11 +105,14 @@
                 </nav>
 
                 <div class="flex max-w-full items-center gap-3">
-                    <button type="button" data-preview-title="Notifikasi" data-preview-message="Belum ada notifikasi baru."
+                    <button type="button" data-preview-title="Notifikasi"
+                        data-preview-message="Belum ada notifikasi baru."
                         aria-label="Lihat notifikasi" class="rounded-lg p-2 hover:bg-[#e7eed8]">
                         <img src="{{ $icon('70762') }}" alt="">
                     </button>
-                    <a href="#profil" class="break-all rounded-full bg-[#f4c84e] px-4 py-2 text-sm font-bold uppercase">
+
+                    <a href="{{ route('profile.show') }}"
+                        class="break-all rounded-full bg-[#f4c84e] px-4 py-2 text-sm font-bold uppercase">
                         {{ $account->name }}
                     </a>
                 </div>
@@ -119,9 +125,11 @@
                         <p class="inline-block rounded-full bg-[#f4c84e] px-3 py-1.5 text-sm font-bold">
                             DASHBOARD PENGGUNA
                         </p>
+
                         <h1 id="dashboard-title" class="mt-4 max-w-[680px] break-words text-3xl leading-tight font-bold sm:text-[44px]">
                             Halo, {{ $firstName }}. Siap mengembangkan karyamu?
                         </h1>
+
                         <p class="mt-4 max-w-[650px] text-lg leading-snug text-[#756a5b] sm:text-[21px]">
                             Belajar HKI, kelola biaya produksi, dan asah kemampuan usahamu melalui satu ruang kerja.
                         </p>
@@ -132,6 +140,7 @@
                                 Lanjutkan Belajar
                                 <img src="{{ $icon('fe62c') }}" alt="">
                             </a>
+
                             <a href="#progres"
                                 class="inline-flex items-center gap-3 rounded-[10px] border border-[#ddd2c3] bg-white px-5 py-4 font-bold text-[#315b37] hover:border-[#315b37]">
                                 Lihat Progres
@@ -166,6 +175,7 @@
                                 Enam fitur utama INKA untuk mendukung perjalanan bisnis kreatif.
                             </p>
                         </div>
+
                         <p class="rounded-full bg-[#dce8cc] px-3 py-1.5 text-sm font-bold text-[#315b37]">
                             6 FITUR TERSEDIA
                         </p>
@@ -173,15 +183,18 @@
 
                     <div class="grid gap-x-4 gap-y-6 sm:grid-cols-2 xl:grid-cols-3">
                         @foreach ($features as [$id, $title, $description, $action, $sidebarIcon, $cardIcon, $background])
-                            <article id="{{ $id }}" class="flex min-h-[270px] scroll-mt-6 flex-col rounded-[18px] p-6 {{ $background }}">
+                            <article id="{{ $id }}"
+                                class="flex min-h-[270px] scroll-mt-6 flex-col rounded-[18px] p-6 {{ $background }}">
                                 <div class="flex items-center justify-between gap-3">
                                     <span class="grid size-[59px] place-items-center rounded-[14px] bg-white">
                                         <img src="{{ $icon($cardIcon) }}" alt="">
                                     </span>
                                     <span aria-hidden="true" class="font-bold text-[#315b37]">0{{ $loop->iteration }}</span>
                                 </div>
+
                                 <h3 class="mt-5 text-[26px] leading-tight font-bold">{{ $title }}</h3>
                                 <p class="mt-3 mb-4 text-[17px] leading-snug text-[#756a5b]">{{ $description }}</p>
+
                                 <button type="button" data-preview-title="{{ $title }}"
                                     data-preview-message="Halaman fitur ini sedang disiapkan."
                                     class="mt-auto inline-flex items-center gap-3 self-start text-left text-[17px] font-bold text-[#315b37] hover:underline">
@@ -220,12 +233,12 @@
                                 <p class="break-all text-sm text-[#756a5b]">{{ $account->email }}</p>
                             </div>
                         </div>
-                        <button type="button" data-preview-title="Profil Saya"
-                            data-preview-message="Halaman kelola profil sedang disiapkan."
+
+                        <a href="{{ route('profile.show') }}"
                             class="mt-4 inline-flex items-center gap-2 font-bold text-[#315b37] hover:underline">
                             Kelola Profil
                             <img src="{{ $icon('7fa1d') }}" alt="">
-                        </button>
+                        </a>
                     </section>
                 </div>
             </main>
@@ -241,6 +254,7 @@
         class="m-auto w-[calc(100%_-_2rem)] max-w-md rounded-3xl bg-[#fff9ef] p-7 text-[#493627] shadow-xl backdrop:bg-black/50">
         <h2 id="dialog-title" class="text-2xl font-bold"></h2>
         <p id="dialog-message" class="mt-3 text-[#756a5b]"></p>
+
         <form method="dialog" class="mt-6">
             <button class="w-full rounded-xl bg-[#315b37] px-5 py-3 font-bold text-white hover:bg-[#284a2d]">
                 Tutup
