@@ -18,7 +18,9 @@
         $icon = fn ($file) => asset("images/inka/dashboard/{$file}.svg");
 
         $featureLinks = [
-            'kuis' => route('quiz.index'),
+            'kuis' => \Illuminate\Support\Facades\Route::has('quiz.index')
+                ? route('quiz.index')
+                : url('/') . '#kuis',
             'bantuan' => route('faq.index'),
         ];
 

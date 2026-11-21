@@ -15,7 +15,12 @@
             'hki' => ['Edukasi HKI', $dashboardUrl . '#edukasi-hki'],
             'panduan' => ['Panduan HKI', $dashboardUrl . '#panduan-hki'],
             'hpp' => ['Kalkulator HPP', $dashboardUrl . '#kalkulator-hpp'],
-            'kuis' => ['Kuis Interaktif', route('quiz.index')],
+            'kuis' => [
+                'Kuis Interaktif',
+                \Illuminate\Support\Facades\Route::has('quiz.index')
+                    ? route('quiz.index')
+                    : url('/') . '#kuis',
+            ],
         ];
 
         $questions = [
