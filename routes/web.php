@@ -14,7 +14,9 @@ Route::post('/register', [AuthController::class, 'register'])
 Route::post('/login', [AuthController::class, 'login'])
     ->middleware('throttle:5,1')
     ->name('login.store');
-    
+
+Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
+
 Route::view('/register', 'auth.register')->name('register');
 
 Route::view('/login', 'auth.login')->name('login');
