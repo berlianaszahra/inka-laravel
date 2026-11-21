@@ -1,0 +1,9 @@
+{
+    auto_https off
+    frankenphp
+}
+
+:{$PORT:8080} {
+    root * /app/public
+    php_server
+}
