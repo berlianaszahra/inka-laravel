@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,3 +22,16 @@ Route::view('/forgot-password', 'auth.forgot-password')->name('password.request'
 Route::view('/register', 'auth.register')->name('register');
 
 Route::view('/login', 'auth.login')->name('login');
+
+Route::middleware('auth')->group(function () {
+    Route::view('/dashboard', 'dashboard')->name('dashboard');
+
+    Route::post('/logout', function (Request $request) {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    })->name('logout');
+});
