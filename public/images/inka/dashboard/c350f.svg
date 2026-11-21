@@ -1,0 +1,16 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="292" height="210" viewBox="0 0 292 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Vector / learn grow create" clip-path="url(#clip0_0_50)">
+<path id="Vector" d="M189 48H42C32.6112 48 25 55.6112 25 65V163C25 172.389 32.6112 180 42 180H189C198.389 180 206 172.389 206 163V65C206 55.6112 198.389 48 189 48Z" fill="#FFF9EF" stroke-width="3" stroke="#493627"/>
+<path id="Vector_2" d="M181 68H52C47.5817 68 44 71.5817 44 76V158C44 162.418 47.5817 166 52 166H181C185.418 166 189 162.418 189 158V76C189 71.5817 185.418 68 181 68Z" fill="#DCE8CC"/>
+<path id="Vector_3" d="M64 96H162M64 117H135M64 138H149" stroke-width="9" stroke-linecap="round" stroke="#315B37"/>
+<path id="Vector_4" d="M206 116C232.51 116 254 94.5097 254 68C254 41.4903 232.51 20 206 20C179.49 20 158 41.4903 158 68C158 94.5097 179.49 116 206 116Z" fill="#F4C84E" stroke-width="3" stroke="#493627"/>
+<path id="Vector_5" d="M188 68L201 82L223 53" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke="#315B37"/>
+<path id="Vector_6" d="M66 194H205" stroke-width="4" stroke-linecap="round" stroke="#493627"/>
+<path id="Vector_7" d="M232 149L241 175L268 182L241 190L232 209L224 190L198 182L224 175L232 149Z" fill="#F4C84E" stroke-width="3" stroke="#315B37"/>
+</g>
+<defs>
+<clipPath id="clip0_0_50">
+<rect width="292" height="210" fill="white"/>
+</clipPath>
+</defs>
+</svg>
