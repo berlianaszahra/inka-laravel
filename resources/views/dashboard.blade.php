@@ -195,12 +195,20 @@
                                 <h3 class="mt-5 text-[26px] leading-tight font-bold">{{ $title }}</h3>
                                 <p class="mt-3 mb-4 text-[17px] leading-snug text-[#756a5b]">{{ $description }}</p>
 
-                                <button type="button" data-preview-title="{{ $title }}"
-                                    data-preview-message="Halaman fitur ini sedang disiapkan."
-                                    class="mt-auto inline-flex items-center gap-3 self-start text-left text-[17px] font-bold text-[#315b37] hover:underline">
-                                    {{ $action }}
-                                    <img src="{{ $icon('47edb') }}" alt="">
-                                </button>
+                                @if ($id === 'kuis')
+                                    <a href="{{ route('quiz.index') }}"
+                                        class="mt-auto inline-flex items-center gap-3 self-start text-[17px] font-bold text-[#315b37] hover:underline">
+                                        {{ $action }}
+                                        <img src="{{ $icon('47edb') }}" alt="">
+                                    </a>
+                                @else
+                                    <button type="button" data-preview-title="{{ $title }}"
+                                        data-preview-message="Halaman fitur ini sedang disiapkan."
+                                        class="mt-auto inline-flex items-center gap-3 self-start text-left text-[17px] font-bold text-[#315b37] hover:underline">
+                                        {{ $action }}
+                                        <img src="{{ $icon('47edb') }}" alt="">
+                                    </button>
+                                @endif
                             </article>
                         @endforeach
                     </div>
