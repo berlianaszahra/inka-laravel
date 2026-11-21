@@ -10,7 +10,7 @@
 <body class="bg-[#fff9ef] font-[Inter,Arial,sans-serif] text-[#493627]">
     @php
         $navigation = [
-            ['Edukasi HKI', '#edukasi-hki'],
+            ['Edukasi HKI', route('education.index')],
             ['Panduan HKI', '#panduan-hki'],
             ['Kalkulator HPP', '#kalkulator-hpp'],
             ['Kuis', '#kuis'],
