@@ -24,6 +24,12 @@ Route::view('/register', 'auth.register')->name('register');
 
 Route::view('/login', 'auth.login')->name('login');
 
+Route::view('/quiz', 'quiz', ['category' => null])->name('quiz.index');
+
+Route::get('/quiz/{category}', function (string $category) {
+    return view('quiz', ['category' => $category]);
+})->whereIn('category', ['haki', 'hpp'])->name('quiz.category');
+
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
@@ -40,6 +46,26 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/profile', [AuthController::class, 'updateProfile'])
     ->name('profile.update');
+
+    Route::get('/quiz/{category}/{topic}/materi', function (string $category, string $topic) {
+    return view('quiz', [
+        'category' => $category,
+        'topic' => (int) $topic,
+        'stage' => 'materi',
+    ]);
+        })->whereIn('category', ['haki', 'hpp'])
+            ->where('topic', '[1-3]')
+            ->name('quiz.material');
+
+        Route::get('/quiz/{category}/{topic}/soal', function (string $category, string $topic) {
+            return view('quiz', [
+                'category' => $category,
+                'topic' => (int) $topic,
+                'stage' => 'soal',
+            ]);
+        })->whereIn('category', ['haki', 'hpp'])
+            ->where('topic', '[1-3]')
+            ->name('quiz.play');
 });
 
 Route::middleware(['auth', 'can:access-admin'])
