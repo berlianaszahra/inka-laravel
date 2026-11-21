@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AdminContentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -66,3 +67,13 @@ Route::middleware('auth')->group(function () {
             ->where('topic', '[1-3]')
             ->name('quiz.play');
 });
+
+Route::middleware(['auth', 'can:access-admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/', [AdminContentController::class, 'index'])->name('index');
+        Route::post('/contents', [AdminContentController::class, 'store'])->name('store');
+        Route::patch('/contents/{content}', [AdminContentController::class, 'update'])->name('update');
+        Route::delete('/contents/{content}', [AdminContentController::class, 'destroy'])->name('destroy');
+    });
