@@ -12,7 +12,7 @@
         $backLabel = auth()->check() ? 'Kembali ke Dashboard' : 'Kembali ke Beranda';
 
         $features = [
-            'hki' => ['Edukasi HKI', $dashboardUrl . '#edukasi-hki'],
+            'hki' => ['Edukasi HKI', route('education.index')],
             'panduan' => ['Panduan HKI', $dashboardUrl . '#panduan-hki'],
             'hpp' => ['Kalkulator HPP', $dashboardUrl . '#kalkulator-hpp'],
             'kuis' => [

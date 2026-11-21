@@ -236,7 +236,7 @@
             @elseif ($selected)
                 <nav aria-label="Navigasi kuis" class="flex flex-wrap items-center gap-x-6 gap-y-2 font-semibold">
                     <a href="{{ route('dashboard') }}" class="hover:underline">Beranda</a>
-                    <a href="{{ route('dashboard') }}#edukasi-hki" class="hover:underline">Edukasi HKI</a>
+                    <a href="{{ route('education.index') }}"class="hover:underline">Edukasi HKI</a>
                     <a href="{{ route('dashboard') }}#kalkulator-hpp" class="hover:underline">Kalkulator HPP</a>
                     <a href="{{ route('quiz.index') }}" class="font-bold text-[#315b37] hover:underline">Kuis</a>
                     <a href="{{ route('profile.show') }}" class="hover:underline">Profil</a>

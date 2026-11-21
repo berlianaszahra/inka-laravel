@@ -113,3 +113,13 @@ Route::prefix('faq')->name('faq.')->group(function () {
         return view('faq', ['screen' => 'confirmation', 'submission' => $submission]);
     })->name('confirmation');
 });
+
+Route::prefix('edukasi-hki')->name('education.')->group(function () {
+    Route::view('/', 'education')->name('index');
+
+    Route::get('/{topic}/{step?}', function (string $topic, string $step = 'konsep') {
+        return view('education', compact('topic', 'step'));
+    })->whereIn('topic', ['dasar-hki', 'merek', 'hak-cipta'])
+        ->whereIn('step', ['konsep', 'kasus', 'latihan'])
+        ->name('lesson');
+});
