@@ -1,58 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# INKA — Ruang Belajar untuk UMKM dan Kreator
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**INKA** adalah proyek akhir Praktikum Pemrograman Web Kelompok 4 PTI C. Aplikasi ini membantu pelaku UMKM dan pekerja kreatif pemula mempelajari **Hak Kekayaan Intelektual (HKI)** dan **Harga Pokok Produksi (HPP)** melalui materi ringkas dan kuis interaktif.
 
-## About Laravel
+## Fitur yang Sudah Tersedia
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Fitur | Yang bisa dicoba |
+| --- | --- |
+| Landing Page | Mengenal INKA, melihat fitur, dan membuka halaman Masuk atau Daftar |
+| Registrasi dan Login | Membuat akun, masuk dengan akun yang terdaftar, dan keluar |
+| Lupa Password | Membuka form email dan melihat popup konfirmasi simulasi |
+| Dashboard Pengguna | Melihat sapaan akun dan mengakses fitur dari menu pengguna |
+| Profil Pengguna | Melihat nama dan email akun serta menyimpan perubahan nama |
+| Kuis HAKI dan HPP | Memilih kategori dan submateri, membaca materi, menjawab 10 soal, serta melihat skor dan ulasan jawaban |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Setiap kategori kuis memiliki tiga submateri dan satu paket latihan berisi 10 soal. Skor dihitung di browser dan belum tersimpan di riwayat akun. Fitur Lupa Password masih berupa simulasi, sehingga belum mengirim tautan melalui email.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Teknologi
 
-## Learning Laravel
+- **Laravel** dan **PHP** untuk routing, autentikasi, dan pengelolaan data akun
+- **Blade** untuk halaman aplikasi
+- **Tailwind CSS** untuk styling dan layout responsif
+- **Vite** untuk membangun aset CSS dan JavaScript
+- **Figma** untuk desain antarmuka
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Cara Menjalankan di Localhost
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Siapkan **PHP 8.4**, **Composer**, **Node.js 22.12+**, dan **npm**.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 1. Clone dan instal dependensi
 
 ```bash
-composer require laravel/boost --dev
+git clone https://github.com/berlianaszahra/inka-laravel.git
+cd inka-laravel
 
-php artisan boost:install
+composer install
+npm install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Siapkan konfigurasi lokal
 
-## Contributing
+Untuk instalasi baru, salin `.env.example` jika `.env` belum ada, lalu buat application key:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+test -f .env || cp .env.example .env
+php artisan key:generate
+```
 
-## Code of Conduct
+Untuk memakai **SQLite**, atur `DB_CONNECTION=sqlite` di `.env` dan hapus pengaturan `DB_DATABASE` lama jika sebelumnya menunjuk ke MySQL. Lalu jalankan:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+touch database/database.sqlite
+php artisan migrate
+```
 
-## Security Vulnerabilities
+Kalau tim memakai **MySQL**, buat database lokal, isi pengaturan `DB_*` di `.env` sesuai database kamu, lalu jalankan `php artisan migrate`. Simpan `.env` di laptop masing-masing.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3. Build dan jalankan aplikasi
 
-## License
+```bash
+npm run build
+php artisan serve
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Buka [http://127.0.0.1:8000](http://127.0.0.1:8000) di browser. Jalankan `npm run build` lagi setelah mengubah styling atau menambah class Tailwind.
+
+## Alur Demo
+
+1. Buka **Landing Page**, klik **Daftar**, lalu buat akun.
+2. **Masuk** dengan akun tersebut untuk membuka Dashboard.
+3. Buka **Profil Saya**, ubah nama, lalu kembali ke Dashboard untuk melihat perubahan.
+4. Pilih **Mulai Kuis → HAKI atau HPP → Baca Materi → Mulai 10 Soal**.
+5. Jawab semua soal, klik **Kumpulkan Kuis**, lalu buka **Lihat Pembahasan**.
+
+## Struktur File
+
+| Lokasi | Isi |
+| --- | --- |
+| `routes/web.php` | Route halaman dan aksi pengguna |
+| `resources/views/auth/` | Halaman Login, Register, dan Lupa Password |
+| `resources/views/dashboard.blade.php` | Dashboard pengguna |
+| `resources/views/profile.blade.php` | Profil dan form edit nama |
+| `resources/views/quiz.blade.php` | Pilihan kategori dan daftar submateri |
+| `resources/views/quiz-lesson.blade.php` | Materi, soal, hasil, dan ulasan jawaban |
+| `config/quiz.php` | Bank soal dan kunci jawaban |
+| `public/images/inka/` | Logo, ikon, dan ilustrasi INKA |
+
+## Kolaborasi Tim
+
+Setiap anggota mengerjakan bagiannya di branch fitur, misalnya `feat/kalkulator-hpp` atau `feat/panduan-hki`. Setelah diuji di localhost, push ke branch tersebut dan buat **Pull Request** ke `main` untuk direview.
+
+[Desain antarmuka INKA di Figma](https://www.figma.com/design/UQoIhtMZ1T35yCdiyrifWY/fix-inka---mcp?node-id=54-6955)
