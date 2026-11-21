@@ -155,13 +155,13 @@
                 <div role="progressbar" aria-label="Tahap materi" aria-valuemin="0"
                     aria-valuemax="{{ count($steps) }}" aria-valuenow="{{ $position }}"
                     class="mt-3 h-2.5 overflow-hidden rounded-full bg-[#dce8cc]">
-                    <div class="h-full rounded-full bg-[#315b37]" style="width: {{ $position / count($steps) * 100 }}%"></div>
+                    <div class="h-full rounded-full bg-[#315b37] {{ [1 => 'w-1/3', 2 => 'w-2/3', 3 => 'w-full'][$position] }}"></div>
                 </div>
 
                 <nav aria-label="Tahapan materi" class="mt-3 grid gap-2 sm:grid-cols-3">
                     @foreach ($steps as $slug => $label)
                         <a href="{{ route('education.lesson', ['topic' => $topic, 'step' => $slug]) }}"
-                            @if ($step === $slug) aria-current="step" @endif
+                            aria-current="{{ $step === $slug ? 'step' : 'false' }}"
                             class="rounded-xl px-4 py-3 font-semibold {{ $step === $slug ? 'bg-[#315b37] text-white' : 'bg-[#dce8cc] text-[#315b37]' }}">
                             {{ sprintf('%02d', $loop->iteration) }} &nbsp; {{ $label }}
                         </a>
