@@ -77,3 +77,39 @@ Route::middleware(['auth', 'can:access-admin'])
         Route::patch('/contents/{content}', [AdminContentController::class, 'update'])->name('update');
         Route::delete('/contents/{content}', [AdminContentController::class, 'destroy'])->name('destroy');
     });
+
+Route::prefix('faq')->name('faq.')->group(function () {
+    Route::view('/', 'faq', ['screen' => 'list'])->name('index');
+
+    Route::get('/jawaban/{number}', function (string $number) {
+        return view('faq', ['screen' => 'answer', 'number' => (int) $number]);
+    })->where('number', '[1-4]')->name('answer');
+
+    Route::view('/ajukan', 'faq', ['screen' => 'form'])->name('ask');
+
+    Route::post('/ajukan', function (Request $request) {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:255'],
+            'category' => ['required', 'in:hki,panduan,hpp,kuis'],
+            'title' => ['required', 'string', 'max:150'],
+            'message' => ['required', 'string', 'max:2000'],
+        ]);
+
+        return redirect()->route('faq.confirmation')->with('faq_submission', [
+            'category' => $data['category'],
+            'title' => $data['title'],
+            'email' => $data['email'],
+        ]);
+    })->middleware('throttle:5,1')->name('send');
+
+    Route::get('/konfirmasi', function (Request $request) {
+        $submission = $request->session()->get('faq_submission');
+
+        if ($submission === null) {
+            return redirect()->route('faq.ask');
+        }
+
+        return view('faq', ['screen' => 'confirmation', 'submission' => $submission]);
+    })->name('confirmation');
+});
