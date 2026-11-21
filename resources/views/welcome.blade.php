@@ -14,7 +14,7 @@
             ['Panduan HKI', '#panduan-hki'],
             ['Kalkulator HPP', '#kalkulator-hpp'],
             ['Kuis', '#kuis'],
-            ['Bantuan', '#bantuan'],
+            ['Bantuan', route('faq.index')],
         ];
 
         $challenges = [
@@ -351,15 +351,14 @@
                 <div>
                     <h2 class="mb-3 font-bold">Dukungan</h2>
                     <ul class="space-y-2">
-                        <li><a href="#bantuan" class="hover:underline">FAQ</a></li>
-                        <li><a href="#pusat-bantuan" class="hover:underline">Pusat Bantuan</a></li>
+                        <li><a href="{{ route('faq.index') }}" class="hover:underline">FAQ</a></li>
+                        <li><a href="{{ route('faq.index') }}" class="hover:underline">Pusat Bantuan</a></li>
                         <li>
                             <a href="{{ route('login') }}" class="hover:underline">Masuk</a>
                             /
                             <a href="{{ route('register') }}" class="hover:underline">Daftar</a>
                         </li>
                     </ul>
-                </div>
             </div>
 
             <div class="mt-7 flex flex-wrap justify-between gap-2 border-t border-white/25 py-5 text-sm">

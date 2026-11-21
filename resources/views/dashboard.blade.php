@@ -9,20 +9,26 @@
 <body class="min-h-screen bg-[#fff9ef] font-[Inter,Arial,sans-serif] text-[#493627]">
     @php
         $account = auth()->user();
-        $nameParts = preg_split('/\s+/u', trim($account->name), -1, PREG_SPLIT_NO_EMPTY);
+        $nameParts = preg_split('/\s+/u', trim($account->name), -1, PREG_SPLIT_NO_EMPTY) ?: [];
         $firstName = $nameParts[0] ?? 'Kreator';
         $initials = collect(array_slice($nameParts, 0, 2))
             ->map(fn ($part) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($part, 0, 1)))
             ->implode('');
+
         $icon = fn ($file) => asset("images/inka/dashboard/{$file}.svg");
+
+        $featureLinks = [
+            'kuis' => route('quiz.index'),
+            'bantuan' => route('faq.index'),
+        ];
 
         $features = [
             ['edukasi-hki', 'Edukasi HKI', 'Kenali hak cipta, merek, dan perlindungan karya lewat materi sederhana.', 'Buka Edukasi', '61f72', '23072', 'bg-[#dce8cc]'],
             ['panduan-hki', 'Panduan HKI', 'Ikuti tahapan persiapan pendaftaran dan checklist dokumen HKI.', 'Buka Panduan', '3f24c', '4cc2f', 'bg-[#f8e6b2]'],
             ['kalkulator-hpp', 'Kalkulator HPP', 'Masukkan komponen biaya untuk memperkirakan biaya produksi per unit.', 'Hitung HPP', '085f6', '01e9b', 'bg-[#e9dccb]'],
-            ['kuis', 'Kuis HAKI & HPP', 'Kerjakan 10 soal per submateri, lihat nilai dan pelajari pembahasannya.', 'Mulai Kuis', '7c941', '6b792', 'bg-[#f8e6b2]'],
+            ['kuis', 'Kuis HAKI & HPP', 'Kerjakan 10 soal, lihat nilai, dan pelajari pembahasannya.', 'Mulai Kuis', '7c941', '6b792', 'bg-[#f8e6b2]'],
             ['riwayat', 'Riwayat & Laporan', 'Buka hasil kalkulasi sebelumnya dan lihat ringkasan biaya usaha.', 'Lihat Riwayat', '6e256', '246f8', 'bg-[#dce8cc]'],
-            ['bantuan', 'Bantuan & FAQ', 'Temukan pertanyaan umum dan panduan penggunaan seluruh fitur.', 'Buka Bantuan', 'ae60b', 'be63b', 'bg-[#e9dccb]'],
+            ['bantuan', 'Bantuan & FAQ', 'Temukan jawaban atau ajukan pertanyaan lewat formulir bantuan.', 'Buka Bantuan', 'ae60b', 'be63b', 'bg-[#e9dccb]'],
         ];
 
         $stats = [
@@ -56,7 +62,7 @@
 
                     @foreach ($features as [$id, $title, $description, $action, $sidebarIcon])
                         <li>
-                            <a href="#{{ $id }}"
+                            <a href="{{ $featureLinks[$id] ?? '#' . $id }}"
                                 class="flex min-h-[57px] items-center gap-[13px] rounded-[10px] px-[17px] text-[18px] font-semibold hover:bg-[#476a4a]">
                                 <img src="{{ $icon($sidebarIcon) }}" alt="">
                                 {{ $id === 'kuis' ? 'Kuis Interaktif' : $title }}
@@ -107,7 +113,8 @@
                 <div class="flex max-w-full items-center gap-3">
                     <button type="button" data-preview-title="Notifikasi"
                         data-preview-message="Belum ada notifikasi baru."
-                        aria-label="Lihat notifikasi" class="rounded-lg p-2 hover:bg-[#e7eed8]">
+                        aria-label="Lihat notifikasi" aria-haspopup="dialog"
+                        class="rounded-lg p-2 hover:bg-[#e7eed8]">
                         <img src="{{ $icon('70762') }}" alt="">
                     </button>
 
@@ -126,7 +133,8 @@
                             DASHBOARD PENGGUNA
                         </p>
 
-                        <h1 id="dashboard-title" class="mt-4 max-w-[680px] break-words text-3xl leading-tight font-bold sm:text-[44px]">
+                        <h1 id="dashboard-title"
+                            class="mt-4 max-w-[680px] break-words text-3xl leading-tight font-bold sm:text-[44px]">
                             Halo, {{ $firstName }}. Siap mengembangkan karyamu?
                         </h1>
 
@@ -175,10 +183,6 @@
                                 Enam fitur utama INKA untuk mendukung perjalanan bisnis kreatif.
                             </p>
                         </div>
-
-                        <p class="rounded-full bg-[#dce8cc] px-3 py-1.5 text-sm font-bold text-[#315b37]">
-                            6 FITUR TERSEDIA
-                        </p>
                     </div>
 
                     <div class="grid gap-x-4 gap-y-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -195,12 +199,20 @@
                                 <h3 class="mt-5 text-[26px] leading-tight font-bold">{{ $title }}</h3>
                                 <p class="mt-3 mb-4 text-[17px] leading-snug text-[#756a5b]">{{ $description }}</p>
 
-                                <button type="button" data-preview-title="{{ $title }}"
-                                    data-preview-message="Halaman fitur ini sedang disiapkan."
-                                    class="mt-auto inline-flex items-center gap-3 self-start text-left text-[17px] font-bold text-[#315b37] hover:underline">
-                                    {{ $action }}
-                                    <img src="{{ $icon('47edb') }}" alt="">
-                                </button>
+                                @if (isset($featureLinks[$id]))
+                                    <a href="{{ $featureLinks[$id] }}"
+                                        class="mt-auto inline-flex items-center gap-3 self-start text-[17px] font-bold text-[#315b37] hover:underline">
+                                        {{ $action }}
+                                        <img src="{{ $icon('47edb') }}" alt="">
+                                    </a>
+                                @else
+                                    <button type="button" data-preview-title="{{ $title }}"
+                                        data-preview-message="Halaman fitur ini sedang disiapkan." aria-haspopup="dialog"
+                                        class="mt-auto inline-flex items-center gap-3 self-start text-left text-[17px] font-bold text-[#315b37] hover:underline">
+                                        {{ $action }}
+                                        <img src="{{ $icon('47edb') }}" alt="">
+                                    </button>
+                                @endif
                             </article>
                         @endforeach
                     </div>
@@ -256,7 +268,8 @@
         <p id="dialog-message" class="mt-3 text-[#756a5b]"></p>
 
         <form method="dialog" class="mt-6">
-            <button class="w-full rounded-xl bg-[#315b37] px-5 py-3 font-bold text-white hover:bg-[#284a2d]">
+            <button type="submit"
+                class="w-full rounded-xl bg-[#315b37] px-5 py-3 font-bold text-white hover:bg-[#284a2d]">
                 Tutup
             </button>
         </form>
