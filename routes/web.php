@@ -114,12 +114,74 @@ Route::prefix('faq')->name('faq.')->group(function () {
     })->name('confirmation');
 });
 
-Route::prefix('edukasi-hki')->name('education.')->group(function () {
-    Route::view('/', 'education')->name('index');
+Route::get('/calculator', function (\Illuminate\Http\Request $request) {
+    $history = collect($request->session()->get('hpp.history', []));
+    $search = trim((string) $request->input('q', ''));
+    $recent = $request->input('period') === '7';
 
-    Route::get('/{topic}/{step?}', function (string $topic, string $step = 'konsep') {
-        return view('education', compact('topic', 'step'));
-    })->whereIn('topic', ['dasar-hki', 'merek', 'hak-cipta'])
-        ->whereIn('step', ['konsep', 'kasus', 'latihan'])
-        ->name('lesson');
-});
+    $entries = $history->filter(function (array $entry) use ($search, $recent) {
+        return ($search === '' || mb_stripos($entry['name'], $search) !== false)
+            && (!$recent || $entry['saved_at'] >= now()->subDays(7)->timestamp);
+    });
+
+    $selected = $history->firstWhere('id', $request->input('detail'));
+
+    return view('calculator', [
+        'result' => $request->session()->get('hpp.result'),
+        'entries' => $entries,
+        'selected' => $selected,
+        'search' => $search,
+        'recent' => $recent,
+    ]);
+})->name('calculator.index');
+
+Route::post('/calculator', function (\Illuminate\Http\Request $request) {
+    $data = $request->validate([
+        'name' => ['required', 'string', 'max:100'],
+        'materials' => ['required', 'integer', 'min:0', 'max:1000000000000'],
+        'labor' => ['required', 'integer', 'min:0', 'max:1000000000000'],
+        'overhead' => ['required', 'integer', 'min:0', 'max:1000000000000'],
+        'quantity' => ['required', 'integer', 'min:1', 'max:1000000000'],
+    ], [
+        'required' => ':attribute wajib diisi.',
+        'integer' => ':attribute harus berupa angka bulat tanpa titik atau koma.',
+        'min' => ':attribute minimal :min.',
+        'max' => ':attribute maksimal :max.',
+    ], [
+        'name' => 'Nama produk',
+        'materials' => 'Biaya bahan baku',
+        'labor' => 'Biaya tenaga kerja',
+        'overhead' => 'Biaya overhead',
+        'quantity' => 'Jumlah produk',
+    ]);
+
+    $total = (int) $data['materials'] + (int) $data['labor'] + (int) $data['overhead'];
+
+    $request->session()->put('hpp.result', [
+        ...$data,
+        'id' => (string) \Illuminate\Support\Str::uuid(),
+        'total' => $total,
+        'hpp' => $total / (int) $data['quantity'],
+    ]);
+
+    return redirect()->route('calculator.index', '#hasil');
+})->name('calculator.calculate');
+
+Route::post('/calculator/history', function (\Illuminate\Http\Request $request) {
+    $result = $request->session()->get('hpp.result');
+
+    if (!$result || $request->input('result_id') !== $result['id']) {
+        return redirect()->route('calculator.index')
+            ->with('hpp_status', 'Hitung HPP lagi sebelum menyimpan hasil.');
+    }
+
+    $history = collect($request->session()->get('hpp.history', []));
+
+    if (!$history->contains('id', $result['id'])) {
+        $history->prepend([...$result, 'saved_at' => now()->timestamp]);
+        $request->session()->put('hpp.history', $history->all());
+    }
+
+    return redirect()->route('calculator.index', '#riwayat')
+        ->with('hpp_status', 'Perhitungan berhasil disimpan.');
+})->name('calculator.save');

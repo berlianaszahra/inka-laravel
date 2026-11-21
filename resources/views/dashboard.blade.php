@@ -22,7 +22,7 @@
                 ? route('quiz.index')
                 : url('/') . '#kuis',
             'bantuan' => route('faq.index'),
-            'edukasi-hki' => route('education.index'),
+            href="{{ route('calculator.index') }}"
         ];
 
         $features = [
