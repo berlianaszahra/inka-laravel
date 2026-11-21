@@ -34,6 +34,14 @@
                     </p>
                 </div>
 
+                @if ($errors->any())
+                    <ul role="alert" class="mb-4 list-disc space-y-1 rounded-xl border border-[#ad9674] px-8 py-3">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+
                 @php
                     $fields = [
                         ['name', 'Nama lengkap', 'text', 'Masukkan nama lengkap', 'name'],
@@ -43,7 +51,9 @@
                     ];
                 @endphp
 
-                <form id="register-preview" method="post" class="space-y-[15px]">
+                <form id="register-form" method="post" action="{{ route('register.store') }}" class="space-y-[15px]">
+                    @csrf
+
                     @foreach ($fields as [$id, $label, $type, $placeholder, $autocomplete])
                         <div>
                             <label for="{{ $id }}" class="mb-[10px] block text-[19px] font-semibold">
@@ -52,7 +62,11 @@
                             <div class="flex h-[68px] items-center gap-2 rounded-xl border-[1.5px] border-[#ddd2c3] bg-white px-4 focus-within:border-[#315b37] focus-within:ring-1 focus-within:ring-[#315b37] sm:px-[22px]">
                                 <input id="{{ $id }}" name="{{ $id }}" type="{{ $type }}"
                                     placeholder="{{ $placeholder }}" autocomplete="{{ $autocomplete }}"
-                                    @if ($type === 'password') minlength="8" @endif
+                                    @if ($type === 'password')
+                                        minlength="8"
+                                    @else
+                                        value="{{ old($id) }}" maxlength="255"
+                                    @endif
                                     required class="h-full min-w-0 flex-1 text-lg outline-none placeholder:text-[#756a5b] sm:text-[20px]">
 
                                 @if ($type === 'password')
@@ -66,26 +80,22 @@
                     @endforeach
 
                     <label class="flex items-center gap-3 text-[17px] text-[#756a5b]">
-                        <input type="checkbox" required
+                        <input type="checkbox" name="terms" value="1" @checked(old('terms')) required
                             class="size-[25px] shrink-0 cursor-pointer appearance-none rounded-[5px] border-2 border-[#315b37] bg-white checked:appearance-auto accent-[#315b37]">
                         <span>Saya menyetujui Syarat Penggunaan dan Kebijakan Privasi INKA.</span>
                     </label>
 
-                    <button type="submit" disabled
-                        class="h-[65px] w-full rounded-xl bg-[#315b37] text-[21px] font-bold text-white hover:bg-[#284a2d] disabled:opacity-60">
+                    <button type="submit"
+                        class="h-[65px] w-full rounded-xl bg-[#315b37] text-[21px] font-bold text-white hover:bg-[#284a2d]">
                         Daftar Sekarang
                     </button>
                 </form>
 
                 <p class="mt-[15px] text-[18px] text-[#756a5b]">
                     Sudah punya akun?
-                    @if (\Illuminate\Support\Facades\Route::has('login'))
-                        <a href="{{ route('login') }}" class="ml-1 font-bold text-[#315b37] hover:underline">
-                            Masuk di sini
-                        </a>
-                    @else
-                        <span class="ml-1 font-bold text-[#315b37]">Masuk di sini</span>
-                    @endif
+                    <a href="{{ route('login') }}" class="ml-1 font-bold text-[#315b37] hover:underline">
+                        Masuk di sini
+                    </a>
                 </p>
             </section>
 
@@ -103,33 +113,19 @@
 
         <footer class="flex flex-wrap justify-between gap-3 text-[#756a5b]">
             <p>© 2026 INKA. Tumbuh bersama karya.</p>
-            <p>
-                Bantuan <span class="mx-2">·</span>
-                Kebijakan Privasi <span class="mx-2">·</span>
-                Syarat Penggunaan
-            </p>
+            <p>Bantuan <span class="mx-2">·</span> Kebijakan Privasi <span class="mx-2">·</span> Syarat Penggunaan</p>
         </footer>
     </div>
 
-    <dialog id="register-dialog" aria-labelledby="preview-title"
-        class="m-auto w-[calc(100%_-_2rem)] max-w-sm rounded-2xl bg-[#fff9ef] p-6 text-[#493627] shadow-xl backdrop:bg-black/50">
-        <h2 id="preview-title" class="text-2xl font-bold">Pratinjau pendaftaran</h2>
-        <p class="mt-3">Form sudah terisi. Penyimpanan akun akan tersedia setelah backend Register terhubung.</p>
-        <form method="dialog" class="mt-5">
-            <button class="rounded-xl bg-[#315b37] px-5 py-2 font-bold text-white">Tutup</button>
-        </form>
-    </dialog>
-
     <script>
-        const form = document.querySelector('#register-preview');
-        const password = form.elements.password;
-        const confirmation = form.elements.password_confirmation;
+        const form = document.querySelector('#register-form');
+        const password = form.elements.namedItem('password');
+        const confirmation = form.elements.namedItem('password_confirmation');
 
         function validateConfirmation() {
+            const mismatch = confirmation.value && confirmation.value !== password.value;
             confirmation.setCustomValidity(
-                confirmation.value && confirmation.value !== password.value
-                    ? 'Konfirmasi password harus sama dengan password.'
-                    : ''
+                mismatch ? 'Konfirmasi password harus sama dengan password.' : ''
             );
         }
 
@@ -145,13 +141,6 @@
                 button.textContent = showPassword ? 'Sembunyikan' : 'Tampilkan';
             });
         }
-
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            document.querySelector('#register-dialog').showModal();
-        });
-
-        form.querySelector('button[type="submit"]').disabled = false;
     </script>
 </body>
 </html>

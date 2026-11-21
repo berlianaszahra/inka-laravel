@@ -14,7 +14,6 @@
                 <img src="{{ asset('images/inka/brand-leaf.svg') }}" alt="">
                 INKA.
             </a>
-
             <nav aria-label="Lokasi halaman" class="flex gap-3 font-semibold text-[#315b37] sm:text-[18px]">
                 <a href="{{ url('/') }}" class="hover:underline">Beranda</a>
                 <span aria-hidden="true">/</span>
@@ -26,33 +25,42 @@
             <section class="w-full max-w-[510px]" aria-labelledby="login-title">
                 <div class="mb-5 space-y-3">
                     <p class="font-bold text-[#315b37]">SELAMAT DATANG KEMBALI</p>
-                    <h1 id="login-title" class="text-[36px] font-bold sm:text-[50px]">
-                        Masuk ke INKA.
-                    </h1>
+                    <h1 id="login-title" class="text-[36px] font-bold sm:text-[50px]">Masuk ke INKA.</h1>
                     <p class="max-w-[505px] text-lg text-[#756a5b] sm:text-[21px]">
                         Lanjutkan perjalanan belajarmu dan kelola usahamu dengan lebih percaya diri.
                     </p>
                 </div>
 
-                <form id="login-preview" method="post" class="space-y-5">
+                @if (session('status'))
+                    <p role="status" class="mb-4 rounded-xl bg-[#dce8cc] px-4 py-3 font-semibold text-[#315b37]">
+                        {{ session('status') }}
+                    </p>
+                @endif
+
+                @if ($errors->any())
+                    <ul role="alert" class="mb-4 list-disc space-y-1 rounded-xl border border-[#ad9674] px-8 py-3">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+
+                <form method="post" action="{{ route('login.store') }}" class="space-y-5">
+                    @csrf
+
                     <div>
-                        <label for="email" class="mb-[10px] block text-[19px] font-semibold">
-                            Alamat email
-                        </label>
-                        <input id="email" name="email" type="email" autocomplete="email"
-                            required placeholder="nama@email.com"
+                        <label for="email" class="mb-[10px] block text-[19px] font-semibold">Alamat email</label>
+                        <input id="email" name="email" type="email" value="{{ old('email') }}"
+                            autocomplete="email" required placeholder="nama@email.com"
                             class="h-[68px] w-full rounded-xl border-[1.5px] border-[#ddd2c3] bg-white px-[22px] text-lg outline-none placeholder:text-[#756a5b] focus:border-[#315b37] focus:ring-1 focus:ring-[#315b37] sm:text-[20px]">
                     </div>
 
                     <div>
-                        <label for="password" class="mb-[10px] block text-[19px] font-semibold">
-                            Password
-                        </label>
+                        <label for="password" class="mb-[10px] block text-[19px] font-semibold">Password</label>
                         <div class="flex h-[68px] items-center gap-2 rounded-xl border-[1.5px] border-[#ddd2c3] bg-white px-4 focus-within:border-[#315b37] focus-within:ring-1 focus-within:ring-[#315b37] sm:px-[22px]">
                             <input id="password" name="password" type="password" autocomplete="current-password"
                                 required placeholder="Masukkan password"
                                 class="h-full min-w-0 flex-1 text-lg outline-none placeholder:text-[#756a5b] sm:text-[20px]">
-
                             <button id="toggle-password" type="button" aria-controls="password"
                                 class="shrink-0 font-semibold text-[#315b37] hover:underline sm:text-[17px]">
                                 Tampilkan
@@ -62,8 +70,7 @@
 
                     <div class="text-right">
                         @if (\Illuminate\Support\Facades\Route::has('password.request'))
-                            <a href="{{ route('password.request') }}"
-                                class="text-[19px] font-bold text-[#315b37] hover:underline">
+                            <a href="{{ route('password.request') }}" class="text-[19px] font-bold text-[#315b37] hover:underline">
                                 Lupa password?
                             </a>
                         @else
@@ -74,8 +81,8 @@
                         @endif
                     </div>
 
-                    <button type="submit" disabled
-                        class="h-[65px] w-full rounded-xl bg-[#315b37] text-[21px] font-bold text-white hover:bg-[#284a2d] disabled:opacity-60">
+                    <button type="submit"
+                        class="h-[65px] w-full rounded-xl bg-[#315b37] text-[21px] font-bold text-white hover:bg-[#284a2d]">
                         Masuk ke Akun INKA
                     </button>
                 </form>
@@ -163,11 +170,7 @@
 
         <footer class="flex flex-wrap justify-between gap-3 text-[#756a5b]">
             <p>© 2026 INKA. Tumbuh bersama karya.</p>
-            <p>
-                Bantuan <span class="mx-2">·</span>
-                Kebijakan Privasi <span class="mx-2">·</span>
-                Syarat Penggunaan
-            </p>
+            <p>Bantuan <span class="mx-2">·</span> Kebijakan Privasi <span class="mx-2">·</span> Syarat Penggunaan</p>
         </footer>
     </div>
 
@@ -181,33 +184,23 @@
     </dialog>
 
     <script>
-        const form = document.querySelector('#login-preview');
         const password = document.querySelector('#password');
         const toggle = document.querySelector('#toggle-password');
         const dialog = document.querySelector('#login-dialog');
         const message = document.querySelector('#preview-message');
 
-        function showPreview(text) {
-            message.textContent = text;
-            dialog.showModal();
-        }
-
         toggle.addEventListener('click', () => {
-            const showing = password.type === 'password';
-            password.type = showing ? 'text' : 'password';
-            toggle.textContent = showing ? 'Sembunyikan' : 'Tampilkan';
-        });
-
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            showPreview('Form sudah terisi. Login dengan akun INKA akan tersedia setelah backend terhubung.');
+            const showPassword = password.type === 'password';
+            password.type = showPassword ? 'text' : 'password';
+            toggle.textContent = showPassword ? 'Sembunyikan' : 'Tampilkan';
         });
 
         for (const button of document.querySelectorAll('[data-preview]')) {
-            button.addEventListener('click', () => showPreview(button.dataset.preview));
+            button.addEventListener('click', () => {
+                message.textContent = button.dataset.preview;
+                dialog.showModal();
+            });
         }
-
-        form.querySelector('[type="submit"]').disabled = false;
     </script>
 </body>
 </html>
