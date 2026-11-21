@@ -51,4 +51,21 @@ class AuthController extends Controller
 
         return redirect()->intended(route('dashboard'));
     }
+
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.max' => 'Nama lengkap maksimal 255 karakter.',
+        ]);
+
+        $account = $request->user();
+        $account->name = $data['name'];
+        $account->save();
+
+        return redirect()->route('profile.show')
+            ->with('status', 'Profil berhasil diperbarui.');
+    }
 }

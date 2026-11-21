@@ -34,4 +34,9 @@ Route::middleware('auth')->group(function () {
 
         return redirect()->route('login');
     })->name('logout');
+
+    Route::view('/profile', 'profile')->name('profile.show');
+
+    Route::patch('/profile', [AuthController::class, 'updateProfile'])
+    ->name('profile.update');
 });
