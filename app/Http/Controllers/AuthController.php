@@ -49,6 +49,12 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
+        if ($request->user()->can('access-admin')) {
+            $request->session()->forget('url.intended');
+
+            return redirect()->route('admin.index');
+        }
+
         return redirect()->intended(route('dashboard'));
     }
 
