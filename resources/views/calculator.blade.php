@@ -27,7 +27,7 @@
             <a href="{{ url('/') }}" class="font-semibold hover:underline">Beranda</a>
             <a href="{{ route('calculator.index') }}" aria-current="page"
                 class="font-bold text-[#315b37]">Kalkulator HPP</a>
-            <a href="#riwayat" class="font-semibold hover:underline">Riwayat HPP</a>
+            <a href="{{ route('hpp.history') }}" class="font-semibold hover:underline">Riwayat HPP</a>
         </nav>
     </header>
 

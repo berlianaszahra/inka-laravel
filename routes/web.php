@@ -182,6 +182,38 @@ Route::post('/calculator/history', function (\Illuminate\Http\Request $request) 
         $request->session()->put('hpp.history', $history->all());
     }
 
-    return redirect()->route('calculator.index', '#riwayat')
+    return redirect()->route('hpp.history')
         ->with('hpp_status', 'Perhitungan berhasil disimpan.');
 })->name('calculator.save');
+
+Route::get('/riwayat-hpp', function (\Illuminate\Http\Request $request) {
+    $search = trim($request->string('q')->toString());
+    $recent = $request->string('period')->toString() === '7';
+    $cutoff = now()->subDays(7)->timestamp;
+
+    $entries = collect($request->session()->get('hpp.history', []))
+        ->filter(function (array $entry) use ($search, $recent, $cutoff) {
+            return ($search === '' || mb_stripos($entry['name'], $search) !== false)
+                && (!$recent || $entry['saved_at'] >= $cutoff);
+        })
+        ->sortByDesc('saved_at');
+
+    return view('hpp-history', [
+        'entries' => $entries,
+        'search' => $search,
+        'recent' => $recent,
+        'report' => null,
+    ]);
+})->name('hpp.history');
+
+Route::get('/riwayat-hpp/{id}', function (\Illuminate\Http\Request $request, string $id) {
+    $report = collect($request->session()->get('hpp.history', []))->firstWhere('id', $id);
+
+    abort_if($report === null, 404);
+
+    return view('hpp-history', ['report' => $report]);
+})->whereUuid('id')->name('hpp.report');
+
+Route::view('/panduan/{langkah?}', 'guide')
+    ->where('langkah', 'persiapan|pengajuan|pemantauan')
+    ->name('guide.index');
