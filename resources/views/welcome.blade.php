@@ -11,7 +11,7 @@
     @php
         $navigation = [
             ['Edukasi HKI', \Illuminate\Support\Facades\Route::has('education.index') ? route('education.index') : '#edukasi'],
-            ['Panduan HKI', '#panduan-hki'],
+            ['Panduan HKI', route('guide.index')],
             ['Kalkulator HPP', route('calculator.index')],
             ['Kuis', '#kuis'],
             ['Bantuan', route('faq.index')],
