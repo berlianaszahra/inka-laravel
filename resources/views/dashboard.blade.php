@@ -18,6 +18,9 @@
         $icon = fn ($file) => asset("images/inka/dashboard/{$file}.svg");
 
         $featureLinks = [
+            'edukasi-hki' => \Illuminate\Support\Facades\Route::has('education.index')
+                ? route('education.index')
+                : url('/edukasi'),
             'kuis' => \Illuminate\Support\Facades\Route::has('quiz.index')
                 ? route('quiz.index')
                 : url('/') . '#kuis',
@@ -232,7 +235,7 @@
                                 <h3 class="text-lg font-bold">Mulai topik pertamamu</h3>
                                 <p class="mt-1 text-[#756a5b]">Pilih materi untuk mulai belajar tentang HKI.</p>
                             </div>
-                            <a href="#edukasi-hki" class="inline-flex items-center gap-2 font-bold text-[#315b37] hover:underline">
+                            <a href="{{ route('education.index') }}" class="inline-flex items-center gap-2 font-bold text-[#315b37] hover:underline">
                                 Mulai
                                 <img src="{{ $icon('7fa1d') }}" alt="">
                             </a>
