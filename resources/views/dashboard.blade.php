@@ -21,10 +21,11 @@
             'kuis' => \Illuminate\Support\Facades\Route::has('quiz.index')
                 ? route('quiz.index')
                 : url('/') . '#kuis',
-            'bantuan' => route('faq.index'),
             'kalkulator-hpp' => route('calculator.index'),
             'riwayat' => route('hpp.history'),
             'panduan-hki' => route('guide.index'),
+            'edukasi-hki' => route('education.index'),
+            'bantuan' => route('faq.index'),
         ];
 
         $features = [

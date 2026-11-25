@@ -90,3 +90,5 @@ Buka [http://127.0.0.1:8000](http://127.0.0.1:8000) di browser. Jalankan `npm ru
 Setiap anggota mengerjakan bagiannya di branch fitur, misalnya `feat/kalkulator-hpp` atau `feat/panduan-hki`. Setelah diuji di localhost, push ke branch tersebut dan buat **Pull Request** ke `main` untuk direview.
 
 [Desain antarmuka INKA di Figma](https://www.figma.com/design/UQoIhtMZ1T35yCdiyrifWY/fix-inka---mcp?node-id=54-6955)
+
+halo
