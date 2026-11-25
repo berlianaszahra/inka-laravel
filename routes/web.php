@@ -217,3 +217,9 @@ Route::get('/riwayat-hpp/{id}', function (\Illuminate\Http\Request $request, str
 Route::view('/panduan/{langkah?}', 'guide')
     ->where('langkah', 'persiapan|pengajuan|pemantauan')
     ->name('guide.index');
+
+Route::view('/edukasi', 'education')->name('education.index');
+
+Route::get('/edukasi/{topic}', function (string $topic) {
+    return view('education', ['topic' => $topic]);
+})->name('education.lesson');
