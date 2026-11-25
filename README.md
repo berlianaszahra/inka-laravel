@@ -1,94 +1,158 @@
-# INKA — Ruang Belajar untuk UMKM dan Kreator
+# INKA — Ruang Belajar HKI & HPP untuk UMKM dan Kreator
 
-**INKA** adalah proyek akhir Praktikum Pemrograman Web Kelompok 4 PTI C. Aplikasi ini membantu pelaku UMKM dan pekerja kreatif pemula mempelajari **Hak Kekayaan Intelektual (HKI)** dan **Harga Pokok Produksi (HPP)** melalui materi ringkas dan kuis interaktif.
+**INKA** adalah aplikasi web berbasis **Laravel** yang dirancang sebagai ruang belajar interaktif bagi **UMKM** dan **pekerja kreatif pemula** untuk memahami **Hak Kekayaan Intelektual (HKI)** serta menghitung **Harga Pokok Produksi (HPP)** secara praktis.
 
-## Fitur yang Sudah Tersedia
+> Proyek Akhir Praktikum Pemrograman Web — **Kelompok 4 PTI C**
 
-| Fitur | Yang bisa dicoba |
-| --- | --- |
-| Landing Page | Mengenal INKA, melihat fitur, dan membuka halaman Masuk atau Daftar |
-| Registrasi dan Login | Membuat akun, masuk dengan akun yang terdaftar, dan keluar |
-| Lupa Password | Membuka form email dan melihat popup konfirmasi simulasi |
-| Dashboard Pengguna | Melihat sapaan akun dan mengakses fitur dari menu pengguna |
-| Profil Pengguna | Melihat nama dan email akun serta menyimpan perubahan nama |
-| Kuis HAKI dan HPP | Memilih kategori dan submateri, membaca materi, menjawab 10 soal, serta melihat skor dan ulasan jawaban |
+---
 
-Setiap kategori kuis memiliki tiga submateri dan satu paket latihan berisi 10 soal. Skor dihitung di browser dan belum tersimpan di riwayat akun. Fitur Lupa Password masih berupa simulasi, sehingga belum mengirim tautan melalui email.
+## Fitur Utama
 
-## Teknologi
+1. **Landing Page & Autentikasi Pengguna**
+   - Halaman beranda informatif mengenai manfaat HKI dan pengelolaan biaya produksi.
+   - Registrasi akun baru, Login, Logout, pembaruan nama profil, serta simulasi Lupa Password.
+   - Pembatasan percobaan (*rate limiting*) pada endpoint autentikasi dan pengiriman pertanyaan bantuan.
 
-- **Laravel** dan **PHP** untuk routing, autentikasi, dan pengelolaan data akun
-- **Blade** untuk halaman aplikasi
-- **Tailwind CSS** untuk styling dan layout responsif
-- **Vite** untuk membangun aset CSS dan JavaScript
-- **Figma** untuk desain antarmuka
+2. **Dashboard Pengguna**
+   - Ringkasan progres belajar dan akses cepat ke 6 modul utama INKA dalam satu tampilan terpadu.
 
-## Cara Menjalankan di Localhost
+3. **Pusat Edukasi HKI (`/edukasi`)**
+   - Tiga topik pembelajaran interaktif: **Mengenal Kekayaan Intelektual (`dasar-hki`)**, **Perlindungan Merek (`merek`)**, dan **Hak Cipta atas Karya Kreatif (`hak-cipta`)**.
+   - Setiap materi disusun dalam 3 tahap terstruktur: **Kenali Konsep**, **Contoh Kasus**, dan **Latihan Singkat** dengan umpan balik langsung.
 
-Siapkan **PHP 8.4**, **Composer**, **Node.js 22.12+**, dan **npm**.
+4. **Panduan Pendaftaran HKI (`/panduan`)**
+   - Alur langkah demi langkah untuk tahap **Persiapan**, **Pengajuan**, dan **Pemantauan** pendaftaran HKI beserta daftar dokumen yang dibutuhkan.
 
-### 1. Clone dan instal dependensi
+5. **Kalkulator & Riwayat HPP (`/calculator` & `/riwayat-hpp`)**
+   - Perhitungan total biaya produksi (bahan baku, tenaga kerja, overhead) dan HPP per unit.
+   - Penyimpanan sementara ke riwayat sesi, pencarian produk, filter 7 hari terakhir, serta tampilan ringkasan laporan HPP.
 
-```bash
-git clone https://github.com/berlianaszahra/inka-laravel.git
-cd inka-laravel
+6. **Kuis Interaktif HAKI & HPP (`/quiz`)**
+   - Kategori **HAKI** dan **HPP**, masing-masing terdiri dari 3 submateri dengan mode baca materi dan latihan 10 soal pilihan ganda beserta skor dan pembahasan.
 
-composer install
-npm install
+7. **Pusat Bantuan & FAQ (`/faq`)**
+   - Daftar pertanyaan yang sering diajukan beserta halaman detail jawaban.
+   - Formulir pengajuan pertanyaan bantuan dengan validasi input dan halaman konfirmasi pengiriman.
+
+8. **Panel Konten Admin (`/admin`)**
+   - Pengelolaan konten oleh akun dengan hak akses `access-admin`.
+
+---
+
+## Teknologi yang Digunakan
+
+- **Backend:** PHP 8.4+, Laravel
+- **Frontend:** Blade Template, Tailwind CSS, Vite
+- **Database:** SQLite / MySQL
+- **Deployment Config:** Docker (`Dockerfile.vercel`), Caddy (`Caddyfile`), Vercel (`vercel.json`)
+
+---
+
+## Struktur Direktori Penting
+
+```text
+inka-laravel/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── AdminContentController.php   # CRUD konten admin
+│   │   └── AuthController.php           # Registrasi, login, dan update profil
+│   └── Models/
+│       ├── AdminContent.php
+│       └── User.php
+├── config/
+│   └── quiz.php                         # Bank materi dan soal kuis HAKI & HPP
+├── database/
+│   └── migrations/                      # Skema tabel users, cache, jobs, dan admin_content
+├── public/images/inka/                  # Aset ilustrasi dan ikon SVG per modul
+├── resources/views/
+│   ├── admin/index.blade.php            # Halaman kelola konten admin
+│   ├── auth/                            # Halaman login, register, forgot-password
+│   ├── calculator.blade.php             # Kalkulator HPP
+│   ├── dashboard.blade.php              # Dashboard utama pengguna
+│   ├── education.blade.php              # Pusat Edukasi HKI (daftar topik & 3 tahap belajar)
+│   ├── faq.blade.php                    # Bantuan, detail jawaban, & form ajukan pertanyaan
+│   ├── guide.blade.php                  # Panduan pendaftaran HKI
+│   ├── hpp-history.blade.php            # Riwayat & laporan perhitungan HPP
+│   ├── profile.blade.php                # Pengaturan profil pengguna
+│   ├── quiz.blade.php                   # Halaman kategori, materi, & soal kuis
+│   └── welcome.blade.php                # Landing page publik
+└── routes/
+    └── web.php                          # Definisi seluruh rute aplikasi
 ```
 
-### 2. Siapkan konfigurasi lokal
+---
 
-Untuk instalasi baru, salin `.env.example` jika `.env` belum ada, lalu buat application key:
+## Daftar Rute Utama
 
-```bash
-test -f .env || cp .env.example .env
-php artisan key:generate
-```
+| Metode | URL | Nama Rute | Keterangan |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/` | — | Landing page aplikasi |
+| `GET` / `POST` | `/register` | `register` / `register.store` | Pendaftaran akun baru |
+| `GET` / `POST` | `/login` | `login` / `login.store` | Masuk ke akun pengguna |
+| `GET` | `/dashboard` | `dashboard` | Dashboard pengguna *(wajib login)* |
+| `GET` / `PATCH` | `/profile` | `profile.show` / `profile.update` | Lihat & ubah nama profil *(wajib login)* |
+| `GET` | `/edukasi` | `education.index` | Daftar topik Pusat Edukasi HKI |
+| `GET` | `/edukasi/{topic}?step=...` | `education.lesson` | Materi edukasi (`konsep`, `kasus`, `latihan`) |
+| `GET` | `/panduan/{langkah?}` | `guide.index` | Panduan HKI (`persiapan`, `pengajuan`, `pemantauan`) |
+| `GET` / `POST` | `/calculator` | `calculator.index` / `calculator.calculate` | Kalkulator perhitungan HPP |
+| `GET` | `/riwayat-hpp` | `hpp.history` | Daftar riwayat perhitungan HPP |
+| `GET` | `/quiz` | `quiz.index` | Halaman utama Kuis HAKI & HPP |
+| `GET` | `/quiz/{category}/{topic}/materi` | `quiz.material` | Baca materi subtopik kuis *(wajib login)* |
+| `GET` | `/quiz/{category}/{topic}/soal` | `quiz.play` | Kerjakan soal kuis *(wajib login)* |
+| `GET` | `/faq` | `faq.index` | Daftar FAQ & Pusat Bantuan |
+| `GET` / `POST` | `/faq/ajukan` | `faq.ask` / `faq.send` | Formulir ajukan pertanyaan bantuan |
 
-Untuk memakai **SQLite**, atur `DB_CONNECTION=sqlite` di `.env` dan hapus pengaturan `DB_DATABASE` lama jika sebelumnya menunjuk ke MySQL. Lalu jalankan:
+---
 
-```bash
-touch database/database.sqlite
-php artisan migrate
-```
+## Panduan Instalasi & Menjalankan di Lokal
 
-Kalau tim memakai **MySQL**, buat database lokal, isi pengaturan `DB_*` di `.env` sesuai database kamu, lalu jalankan `php artisan migrate`. Simpan `.env` di laptop masing-masing.
+### Prasyarat
+- **PHP** `>= 8.4`
+- **Composer**
+- **Node.js** `>= 22.12` & **npm**
 
-### 3. Build dan jalankan aplikasi
+### Langkah Instalasi
 
-```bash
-npm run build
-php artisan serve
-```
+1. **Clone repository dan masuk ke direktori proyek**
+   ```bash
+   git clone https://github.com/berlianaszahra/inka-laravel.git
+   cd inka-laravel
+   ```
 
-Buka [http://127.0.0.1:8000](http://127.0.0.1:8000) di browser. Jalankan `npm run build` lagi setelah mengubah styling atau menambah class Tailwind.
+2. **Install dependensi PHP dan JavaScript**
+   ```bash
+   composer install
+   npm install
+   ```
 
-## Alur Demo
+3. **Salin konfigurasi environment dan buat application key**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-1. Buka **Landing Page**, klik **Daftar**, lalu buat akun.
-2. **Masuk** dengan akun tersebut untuk membuka Dashboard.
-3. Buka **Profil Saya**, ubah nama, lalu kembali ke Dashboard untuk melihat perubahan.
-4. Pilih **Mulai Kuis → HAKI atau HPP → Baca Materi → Mulai 10 Soal**.
-5. Jawab semua soal, klik **Kumpulkan Kuis**, lalu buka **Lihat Pembahasan**.
+4. **Siapkan database dan jalankan migrasi**
+   Jika menggunakan SQLite (default Laravel):
+   ```bash
+   touch database/database.sqlite
+   php artisan migrate
+   ```
+   *(Jika menggunakan MySQL, sesuaikan pengaturan `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD` di file `.env` terlebih dahulu).*
 
-## Struktur File
+5. **Build aset frontend dan jalankan server lokal**
+   ```bash
+   npm run build
+   php artisan serve
+   ```
+   Buka aplikasi di browser melalui `http://127.0.0.1:8000`.
 
-| Lokasi | Isi |
-| --- | --- |
-| `routes/web.php` | Route halaman dan aksi pengguna |
-| `resources/views/auth/` | Halaman Login, Register, dan Lupa Password |
-| `resources/views/dashboard.blade.php` | Dashboard pengguna |
-| `resources/views/profile.blade.php` | Profil dan form edit nama |
-| `resources/views/quiz.blade.php` | Pilihan kategori dan daftar submateri |
-| `resources/views/quiz-lesson.blade.php` | Materi, soal, hasil, dan ulasan jawaban |
-| `config/quiz.php` | Bank soal dan kunci jawaban |
-| `public/images/inka/` | Logo, ikon, dan ilustrasi INKA |
+---
 
-## Kolaborasi Tim
+## Catatan Pengembangan
 
-Setiap anggota mengerjakan bagiannya di branch fitur, misalnya `feat/kalkulator-hpp` atau `feat/panduan-hki`. Setelah diuji di localhost, push ke branch tersebut dan buat **Pull Request** ke `main` untuk direview.
-
-[Desain antarmuka INKA di Figma](https://www.figma.com/design/UQoIhtMZ1T35yCdiyrifWY/fix-inka---mcp?node-id=54-6955)
-
-halo 
+- Apabila mengubah file rute atau tampilan Blade, bersihkan cache Laravel dengan:
+  ```bash
+  php artisan route:clear
+  php artisan view:clear
+  ```
+- Saat ini penyimpanan riwayat HPP dan pengerjaan kuis berjalan berbasis sesi/browser, sedangkan fitur *Lupa Password* dan *Notifikasi* menggunakan antarmuka simulasi.
