@@ -220,6 +220,16 @@ Route::view('/panduan/{langkah?}', 'guide')
 
 Route::view('/edukasi', 'education')->name('education.index');
 
-Route::get('/edukasi/{topic}', function (string $topic) {
-    return view('education', ['topic' => $topic]);
-})->name('education.lesson');
+Route::get('/edukasi/{topic}', function (Request $request, string $topic) {
+    $step = $request->query('step', 'konsep');
+    $validSteps = ['konsep', 'kasus', 'latihan'];
+
+    if (!in_array($step, $validSteps, true)) {
+        $step = 'konsep';
+    }
+
+    return view('education', [
+        'topic' => $topic,
+        'step' => $step,
+    ]);
+})->whereIn('topic', ['dasar-hki', 'merek', 'hak-cipta'])->name('education.lesson');

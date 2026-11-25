@@ -66,8 +66,9 @@
             ],
         ];
 
-        $lesson = isset($topic) ? $lessons[$topic] : null;
+        $lesson = (isset($topic) && isset($lessons[$topic])) ? $lessons[$topic] : null;
         $steps = ['konsep' => 'Kenali Konsep', 'kasus' => 'Contoh Kasus', 'latihan' => 'Latihan Singkat'];
+        $step = (isset($step) && array_key_exists($step, $steps)) ? $step : 'konsep';
         $home = auth()->check() ? route('dashboard') : url('/');
         $primary = 'inline-flex items-center justify-center rounded-xl bg-[#315b37] px-5 py-3 font-bold text-white hover:bg-[#284a2d]';
         $secondary = 'inline-flex items-center justify-center rounded-xl border border-[#ddd2c3] bg-white px-5 py-3 font-bold text-[#315b37] hover:border-[#315b37]';
